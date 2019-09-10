@@ -1,0 +1,39 @@
+<template>
+  <div>
+    <div id="border-div">
+      <p>Hello World!!!</p>
+      <slot></slot>
+    </div>
+  </div>
+
+  <style>
+    * {
+      color: red;
+    }
+
+    p {
+      background-color: darkgreen;
+    }
+
+    #border-div {
+      border: 1px solid rgb(190, 189, 189);
+    }
+  </style>
+
+</template>
+<script>
+  {
+    const ownerDocument = document.currentScript.ownerDocument;
+    const moduleName = new URL(document.currentScript.ownerDocument.URL).searchParams.get('as') || "hellow-world"
+
+    window.customElements.define(moduleName, class extends HTMLElement {
+      constructor() {
+        super()
+        const shadowRoot = this.attachShadow({ mode: 'open' })
+        const t = ownerDocument.getElementsByTagName('template')[0];
+        const instance = t.content.cloneNode(true);
+        shadowRoot.appendChild(instance);
+      }
+    });
+  }
+</script>
