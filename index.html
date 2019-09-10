@@ -1,12 +1,39 @@
-<html>
+<!DOCTYPE html>
 
 <head>
+  <meta charset="UTF-8">
   <link rel="import" href="/components/hello-world.html?as=hoge-piyo">
+  <link rel="import" href="/components/text-form.html">
+
+  <style>
+    li + li {
+      margin-top: 3px;
+    }
+  </style>
+
+  <script>
+    function onclick(text) {
+      console.log(`main onclick ${text}`)
+    }
+  </script>
 </head>
 
 <body>
-  <hello-world>動かない</hello-world>
-  <hoge-piyo>動く</hoge-piyo>
+  <ul>
+
+    <li>
+      <hello-world>動かない</hello-world>
+    </li>
+    <li>
+      <hoge-piyo>動く</hoge-piyo>
+    </li>
+    <li>
+      <text-form></text-form>
+    </li>
+    <li>
+      <text-form text="initial text" onclick="onclick"></text-form>
+    </li>
+  </ul>
 </body>
 
 </html>

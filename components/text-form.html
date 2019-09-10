@@ -1,0 +1,106 @@
+<!--
+  ## Install
+    <link rel="import" href="{this file}">
+  ## Usage
+    <text-form text="initial text" onclick="your script" />
+  ## Feature
+  - buttonを押すと、textfieldの内容をonclickコールバックに投げます
+  - バリデーションし、buttonのdisabledを自動で切り替えます
+  - text属性でtextfieldの内容をコントロールできます
+-->
+<template>
+  <div>
+    <input />
+    <button disabled>決定</button>
+  </div>
+
+  <style>
+    div {
+      border: 1px solid black;
+    }
+  </style>
+</template>
+
+<script>
+
+  {
+    const ownerDocument = document.currentScript.ownerDocument;
+    const moduleName = new URL(document.currentScript.ownerDocument.URL).searchParams.get('as') || "text-form"
+
+    window.customElements.define(moduleName, class extends HTMLElement {
+      static get observedAttributes() {
+        return ['onclick', 'text'];
+      }
+
+      get text() {
+        return this.getAttribute('text')
+      }
+
+      set text(val) {
+        this.setAttribute('text', val)
+      }
+
+      set onclick(val) {
+        this.setAttribute('onclick', val)
+      }
+
+      get _text() {
+        return this.shadowRoot.querySelector('input').value;
+      }
+
+      /**
+       * @param val [string]
+       */
+      set _text(val) {
+        this.shadowRoot.querySelector('input').value = val;
+        if (val.length === 0) {
+          this._button.setAttribute('disabled', '')
+        } else {
+          this._button.removeAttribute('disabled')
+        }
+      }
+
+      _onclick = null;
+
+      get _button() {
+        return this.shadowRoot.querySelector('button');
+      }
+
+      constructor() {
+        super()
+        const shadowRoot = this.attachShadow({ mode: 'open' })
+        const t = ownerDocument.getElementsByTagName('template')[0];
+        const instance = t.content.cloneNode(true);
+        shadowRoot.appendChild(instance);
+
+        shadowRoot.querySelector('input').addEventListener('input', (e) => {
+          this.onTextFieldInput(e.target.value)
+        });
+        shadowRoot.querySelector('button').addEventListener('click', () => {
+          this.onButtonClick()
+        });
+      }
+
+      attributeChangedCallback(name, oldValue, newValue) {
+        if (name === 'onclick') {
+          this._onclick = newValue;
+          console.log('attributeChangedCallback')
+          console.log(newValue)
+        } else if (name === 'text') {
+          this._text = newValue
+        }
+      }
+
+      onTextFieldInput(text) {
+        this.text = text
+      }
+
+      onButtonClick() {
+        console.log('text-form onButtonClick')
+        eval(this._onclick)(this.text)
+        this.text = ""
+      }
+    });
+  }
+
+</script>
