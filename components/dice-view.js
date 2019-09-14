@@ -1,23 +1,33 @@
-const template = `
-<div>
-  <div id="me">6</div>
+const template = (() => {
+  const element = document.createElement('html');
+  element.innerHTML = `
+  <template>
+    <div>6</div>
 
-  <style>
-    #me {
-      border: 1px solid black;
-      background-color: white;
-      width: 30px;
-      height: 30px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-  </style>
-<div>
-`
-export class DiceView extends HTMLElement {
+    <style>
+      div {
+        border: 1px solid black;
+        background-color: white;
+        width: 30px;
+        height: 30px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .dark {
+        border-color: white;
+        background-color: gray;
+      }
+    </style>
+  </template>
+  `;
+  return element.getElementsByTagName('template')[0];
+})();
+
+export default class extends HTMLElement {
   static get observedAttributes() {
-    return ['number'];
+    return ['number', "class"];
   }
 
   set number(val) {
@@ -26,9 +36,8 @@ export class DiceView extends HTMLElement {
 
   constructor() {
     super();
-    this.attachShadow({ mode: "open" }).innerHTML = template;
-    this.core = new DiceViewCore(this.shadowRoot, () => {
-      console.log("@@@nikonko")
+    this.attachShadow({ mode: "open" }).appendChild(template.content.cloneNode(true));
+    this.core = new DiceView(this.shadowRoot, () => {
       this.number = Math.floor(Math.random() * 6) + 1
     });
   }
@@ -36,19 +45,25 @@ export class DiceView extends HTMLElement {
   attributeChangedCallback(name, oldValue, newValue) {
     if (name === 'number') {
       this.core.number = newValue;
+    }else if(name === 'class') {
+      this.core.class = newValue;
     }
   }
 }
 
-class DiceViewCore {
+class DiceView {
 
   set number(val) {
-    this.host.querySelector('#me').innerHTML = val;
+    this.host.querySelector('div').innerHTML = val;
+  }
+
+  set class(val) {
+    this.host.querySelector('div').setAttribute('class', val);
   }
 
   constructor(host, onclick) {
     this.host = host;
-    this.me = this.host.querySelector('#me')
+    this.me = this.host.querySelector('div');
     this.me.addEventListener('click', () => {
       onclick();
     });

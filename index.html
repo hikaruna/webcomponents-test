@@ -5,7 +5,7 @@
   <link rel="import" href="./components/hello-world.html?as=hoge-piyo">
   <link rel="import" href="./components/text-form.html">
   <script type="module">
-    import { DiceView } from './components/dice-view.js';
+    import DiceView from './components/dice-view.js';
     window.customElements.define('dice-view', DiceView);
   </script>
 
@@ -38,6 +38,11 @@
       <text-form text="initial text" onclick="onclick"></text-form>
     </li>
     <li>
+      <dice-view></dice-view>
+      <dice-view class="dark"></dice-view>
+      <dice-view></dice-view>
+      <dice-view></dice-view>
+      <dice-view></dice-view>
       <dice-view></dice-view>
     </li>
   </ul>
