@@ -4,6 +4,10 @@
   <meta charset="UTF-8">
   <link rel="import" href="./components/hello-world.html?as=hoge-piyo">
   <link rel="import" href="./components/text-form.html">
+  <script type="module">
+    import { DiceView } from './components/dice-view.js';
+    window.customElements.define('dice-view', DiceView);
+  </script>
 
   <style>
     li + li {
@@ -32,6 +36,9 @@
     </li>
     <li>
       <text-form text="initial text" onclick="onclick"></text-form>
+    </li>
+    <li>
+      <dice-view></dice-view>
     </li>
   </ul>
 </body>
